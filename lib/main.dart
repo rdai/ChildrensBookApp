@@ -91,49 +91,42 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PageView.builder(
         itemBuilder: (BuildContext context, int index) {
           return Card(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 32, bottom: 32, left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FittedBox(
+                  child: Image.network(
+                    'https://asiaserver.icu/childrensbookapp/' +
+                        _pages[index]['image'],
+                    height: 400,
+                    width: 400,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Expanded(
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        height: 400,
-                        width: 400,
-                        child: Image.network(
-                            'https://asiaserver.icu/childrensbookapp/' +
-                                _pages[index]['image']),
-                      ),
-                      Flexible(
-                        child: Column(
-                          children: [
-                            Text(
-                              _pages[index]['text'],
-                              //'Note Title',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                              softWrap: false,
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        child: Text('Play'),
-                        onPressed: () {
-                          audioCache.play(
-                              'https://asiaserver.icu/childrensbookapp/' +
-                                  _pages[index]['audio']);
-                        },
+                      // new Text(_pages[index]['text']),
+                      new Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        child: new Text(_pages[index]['text']),
                       ),
                     ],
                   ),
-                  //SizedBox(width: 20),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    child: Text('Play'),
+                    onPressed: () {
+                      audioCache.play(
+                          'https://asiaserver.icu/childrensbookapp/' +
+                              _pages[index]['audio']);
+                    },
+                  ),
+                ),
+              ],
             ),
           );
         },
