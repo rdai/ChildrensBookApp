@@ -1,4 +1,4 @@
-package com.example.childrensbookapp
+package net.surehope.beeblio
 
 import io.flutter.embedding.android.FlutterActivity
 
