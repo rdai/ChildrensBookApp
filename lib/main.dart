@@ -1,15 +1,25 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'colors.dart';
+// import 'booklist.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  @override
+
 // This widget is the root
 // of your application.
   @override
@@ -33,6 +43,13 @@ class MyApp extends StatelessWidget {
       ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'poppins',
+        textTheme: const TextTheme(
+          headline1: TextStyle(
+            fontSize: 22,
+            backgroundColor: custom2,
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
@@ -49,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List _pages = [];
   int _curr = 0;
   PageController controller = PageController();
-  AudioCache audioCache = AudioCache();
+  late AudioPlayer player = AudioPlayer();
 
   Future<void> readJson() async {
     var url = Uri.parse('https://asiaserver.icu/childrensbookapp/stories.json');
@@ -63,8 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await readJson();
+      FirebaseAnalytics.instance.logEvent(name: 'readJson');
     });
   }
 
@@ -73,8 +92,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle),
-        backgroundColor: Colors.green,
+        title: Text(
+          AppLocalizations.of(context)!.appTitle,
+          style: TextStyle(fontFamily: 'biscuitkids'),
+        ),
+        backgroundColor: Theme.of(context).textTheme.headline1!.backgroundColor,
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.all(3.0),
@@ -99,32 +121,33 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Image.network(
                     'https://asiaserver.icu/childrensbookapp/' +
                         _pages[index]['image'],
-                    height: 400,
-                    width: 400,
+                    height: 300,
+                    width: 300,
                     fit: BoxFit.contain,
                   ),
                 ),
                 Expanded(
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      // new Text(_pages[index]['text']),
-                      new Container(
-                        margin: const EdgeInsets.only(top: 5.0),
-                        child: new Text(_pages[index]['text']),
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(left: 12, right: 12),
+                    scrollDirection: Axis.vertical,
+                    // margin: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      _pages[index]['text'],
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
                 ),
-                Expanded(
-                  child: TextButton(
-                    child: Text('Play'),
-                    onPressed: () {
-                      audioCache.play(
-                          'https://asiaserver.icu/childrensbookapp/' +
-                              _pages[index]['audio']);
-                    },
-                  ),
+                ElevatedButton(
+                  child: Text('Play'),
+                  onPressed: () async {
+                    await player.setUrl(
+                        'https://asiaserver.icu/childrensbookapp/' +
+                            _pages[index]['audio']);
+                    await player.play();
+                  },
+                ),
+                SizedBox(
+                  height: 20,
                 ),
               ],
             ),
@@ -135,6 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
         physics: BouncingScrollPhysics(),
         controller: controller,
         onPageChanged: (num) {
+          player.stop();
           setState(() {
             _curr = num;
           });

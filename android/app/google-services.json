@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "430155608251",
+    "project_id": "beeblio-74494",
+    "storage_bucket": "beeblio-74494.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430155608251:android:3897238a6647cc8f7af99e",
+        "android_client_info": {
+          "package_name": "net.surehope.beeblio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430155608251-v2qel82h4rjj2b0dv0vt0pnbbr5n6d7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkhVA2kv_t2u87XOzZZcbdmxtIUWT2wpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430155608251-v2qel82h4rjj2b0dv0vt0pnbbr5n6d7o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "430155608251-1t1le6epk7q4802o9dr7n9hp0ntugatb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.childrensbookapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
